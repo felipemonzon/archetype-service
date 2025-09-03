@@ -3,4 +3,5 @@
  * Contiene la lógica de negocio y orquesta las operaciones del dominio.
  */
 @file:JvmName("PackageInfo")
-package com.moontech.archetype.application.service
+
+package com.moontech.archetype.application.business

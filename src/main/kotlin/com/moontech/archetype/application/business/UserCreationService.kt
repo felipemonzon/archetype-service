@@ -1,7 +1,8 @@
-package com.moontech.archetype.application.service
+package com.moontech.archetype.application.business
 
 import com.moontech.archetype.domain.model.User
 import com.moontech.archetype.domain.repository.UserRepository
+import com.moontech.archetype.infrastructure.model.UserDto
 import org.springframework.stereotype.Service
 
 /**
@@ -15,15 +16,11 @@ import org.springframework.stereotype.Service
 class UserCreationService(private val userRepository: UserRepository) {
 
     // Método principal del caso de uso.
-    fun createNewUser(name: String, email: String, username: String, password: String): User {
-        require(this.userRepository.findByEmail(email).isPresent) {
+    fun createNewUser(user: UserDto): User {
+        require(this.userRepository.findByEmail(user.email).isPresent) {
             throw IllegalArgumentException("El correo electrónico ya existe.")
         }
-        val newUser = User(
-            name = name, email = email,
-            username = username,
-            password = password
-        )
+        val newUser = user.toDomain()
         return this.userRepository.save(newUser)
     }
 }
