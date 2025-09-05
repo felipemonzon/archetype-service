@@ -18,6 +18,7 @@ data class User(
     val username: String,
     @JsonIgnore
     val password: String,
+    val roles: Set<Authority>,
     val creationDate: LocalDateTime = LocalDateTime.now()
 ) {
 

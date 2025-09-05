@@ -41,3 +41,23 @@ logging:
       hibernate:
         SQL: DEBUG
         type.descriptor.sql.BasicBinder: TRACE
+
+# ===================================================================
+# SECURITY PROPERTIES
+# ===================================================================
+security:
+  jwt:
+    key: d8aB4z9pY7vK2rX1tF5sU3wE8cQ0iN6hJ4g7j9l2m0oQ4wR5tY8uI0oP3L2kM7nO9pX7B3N0qK4J7V1pE2wR5tY8uIO9pX7B3N0qK4J7V1pE2wR5tY8uI
+    lifeTime: 631138000000
+  cors:
+    origins:
+      http://127.0.0.1:4200,
+      http://localhost:4200,
+      http://localhost:4201
+
+api:
+  uri:
+    domain:
+      users: /users
+    data:
+      authentication: ${api.uri.domain.users}/authentication

@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
@@ -31,22 +33,26 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.flywaydb:flyway-mysql")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
-	compileOnly("org.projectlombok:lombok")
+    implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:${project.properties["jasypt_version"] as String}")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("io.jsonwebtoken:jjwt-api:${project.properties["jwt_version"] as String}")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:${project.properties["jwt_version"] as String}")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:${project.properties["jwt_version"] as String}")
 }
 
 kotlin {
@@ -63,4 +69,10 @@ allOpen {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        resources.srcDir("src/generated/resources")
+    }
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
  *  @since 02 sept, 2025
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 class UserController(private val userCreationService: UserCreationService) {
     @PostMapping
     fun createUser(@Valid @RequestBody userDTO: UserDto): ResponseEntity<UserDto> {

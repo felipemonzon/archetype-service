@@ -1,8 +1,10 @@
 package com.moontech.archetype.infrastructure.model
 
+import com.moontech.archetype.domain.model.Authority
 import com.moontech.archetype.domain.model.User
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 
 /**
  * DTO para manejar la entrada y salida de datos en la API.
@@ -20,13 +22,17 @@ class UserDto(
     val username: String,
     @field:NotBlank
     val password: String,
+    @field:NotNull
+    val roles: Set<Authority>
 ) {
     // Método para convertir a la entidad de dominio.
     fun toDomain(): User {
         return User(
-            name = this.name, email = this.email,
+            name = this.name,
+            email = this.email,
             username = this.username,
             password = this.password,
+            roles = this.roles
         )
     }
 
@@ -36,7 +42,8 @@ class UserDto(
             return UserDto(
                 name = user.name, email = user.email,
                 username = user.username,
-                password = user.password
+                password = user.password,
+                roles = user.roles
             )
         }
     }
