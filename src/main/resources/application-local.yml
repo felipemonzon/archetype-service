@@ -7,33 +7,38 @@ server:
     max-http-form-post-size: 20MB
     max-swallow-size: 20MB
 spring:
-  application:
-    name: archetype-service
-  main.banner-mode: off
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/archetype
-    username: ENC(ku7ULo35PR0vtzrDInm9YZe0l3cz6Z2rp2ON6YD2lKdNOmj2rzmdwlyr6PdRj5gg)
-    password: ENC(17Atuv7t31S12Oz8kBXTfyTTVt6GYNDr6ousctZdQ2TK/5TcRbpUoo5pEBdvb4J5)
+    username: ENC(77NlOX9VvQOchzx6SOS9eTs5w7zNj2hxoKe3BLugPg+XLBYbZrJfNBDDhO4ycpA1)
+    password: ENC(pb6+XoSEso7rWadRCxfg2GusDMBPGCRlsQ9q6VAZr6X5fOmpJaOp+9YF0W7aSJE5)
   jpa:
     naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
     hibernate.ddl-auto: validate
     properties:
       hibernate:
         format_sql: false
-
-  flyway:
-    enabled: true
-    locations: classpath:/db/migration
-    baseline-on-migrate: true
-    baseline: 0
+  # HikariCP specific configuration
+  hikari:
+    pool-name: MySqlHikariCP
+    auto-commit: true
+    connection-timeout: 30000  # 30 seconds
+    idle-timeout: 600000       # 10 minutes
+    max-lifetime: 1800000      # 30 minutes
+    maximum-pool-size: 10
+    minimum-idle: 10
+    leak-detection-threshold: 60000 # 1 minute
+    # MySQL-specific optimizations for prepared statement caching
+    data-source-properties:
+      cachePrepStmts: true
+      prepStmtCacheSize: 250
+      prepStmtCacheSqlLimit: 2048
+      useServerPrepStmts: true
+      rewriteBatchedStatements: true # Recommended for batch inserts/updates
 # ===================================================================
 # LOG PROPERTIES
 # ===================================================================
 logging:
-  pattern:
-    file: '[%X{data}%thread] [%X{X-B3-TraceId:-}] - %5p'
-    console: "%p [${spring.application.name:}, %d{'yyyy-MM-dd HH:mm:ss,SSS',America/Mexico_City}, %C{1}:%M:%L, %X{mdc.uuid}, %m%n%ex{3}"
   level:
     com.moontech: DEBUG
     org:
@@ -47,17 +52,10 @@ logging:
 # ===================================================================
 security:
   jwt:
-    key: d8aB4z9pY7vK2rX1tF5sU3wE8cQ0iN6hJ4g7j9l2m0oQ4wR5tY8uI0oP3L2kM7nO9pX7B3N0qK4J7V1pE2wR5tY8uIO9pX7B3N0qK4J7V1pE2wR5tY8uI
+    key: ENC(3BPPvq63hexKPAjBtJqkmd8OTce3zZ9JNpKWFCt6JTu3TqFB0y+Ck8R2GStuoFgnd2FlLqU3AbsEog16uJfOW5BYeyBAgYCXhMJn51KjpzyuCA3SKU0Y9MNDwQLWQmJM6QWyhwut5OWj8OqTAYlKKlvw5qpJTT1HoMgCpVdtmvwY1JIYOg/Imazvw9+R/Yw3TE+MCQLouUw5v3whZ58Q7g==)
     lifeTime: 631138000000
   cors:
     origins:
       http://127.0.0.1:4200,
       http://localhost:4200,
       http://localhost:4201
-
-api:
-  uri:
-    domain:
-      users: /users
-    data:
-      authentication: ${api.uri.domain.users}/authentication

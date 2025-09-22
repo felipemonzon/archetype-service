@@ -22,25 +22,26 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/users/authentication")
 class LoginController(
-    private val authenticationManager: AuthenticationManager,
-    private val jwtService: JwtService
+  private val authenticationManager: AuthenticationManager,
+  private val jwtService: JwtService,
 ) {
-    /**
-     * Endpoint para autenticar a un usuario y generar un JWT.
-     *
-     * @param authRequest Objeto que contiene las credenciales del usuario.
-     * @return ResponseEntity con el JWT si la autenticación es exitosa.
-     */
-    @PostMapping
-    fun login(@RequestBody authRequest: AuthDto): ResponseEntity<Unit> {
-        return try {
-            val authentication = authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(authRequest.username, authRequest.password)
-            )
-            val jwtToken = jwtService.generateToken(authentication.name)
-            ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer $jwtToken").build()
-        } catch (e: AuthenticationException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        }
+  /**
+   * Endpoint para autenticar a un usuario y generar un JWT.
+   *
+   * @param authRequest Objeto que contiene las credenciales del usuario.
+   * @return ResponseEntity con el JWT si la autenticación es exitosa.
+   */
+  @PostMapping
+  fun login(@RequestBody authRequest: AuthDto): ResponseEntity<Unit> {
+    return try {
+      val authentication =
+        authenticationManager.authenticate(
+          UsernamePasswordAuthenticationToken(authRequest.username, authRequest.password)
+        )
+      val jwtToken = jwtService.generateToken(authentication.name)
+      ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer $jwtToken").build()
+    } catch (e: AuthenticationException) {
+      ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
     }
+  }
 }

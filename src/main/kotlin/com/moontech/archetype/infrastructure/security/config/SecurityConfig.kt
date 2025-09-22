@@ -32,84 +32,83 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 @EnableMethodSecurity
 class SecurityConfig(
-    private val jwtAuthFilter: JwtAuthenticationFilter,
-    private val userDetailsService: UserDetailsService,
-    private val securityProperties: SecurityProperties
+  private val jwtAuthFilter: JwtAuthenticationFilter,
+  private val userDetailsService: UserDetailsService,
+  private val securityProperties: SecurityProperties,
 ) {
-    /**
-     * Define la cadena de filtros de seguridad.
-     */
-    @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http
-            .csrf { it.disable() }
-            .cors { it.configurationSource(corsConfigurationSource()) }
-            .headers {
-                it.xssProtection { xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK) }
-                it.contentSecurityPolicy { cps -> cps.policyDirectives("default-src 'self'") }
-                it.httpStrictTransportSecurity { hsts -> hsts.includeSubDomains(true).maxAgeInSeconds(36L) }
-            }
-            .authorizeHttpRequests { authorize ->
-                authorize
-                    .requestMatchers(this.securityProperties.userAuthenticationPath).permitAll()
-                    .anyRequest().authenticated()
-            }
-            .sessionManagement {
-                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+  /** Define la cadena de filtros de seguridad. */
+  @Bean
+  fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    http
+      .csrf { it.disable() }
+      .cors { it.configurationSource(corsConfigurationSource()) }
+      .headers {
+        it.xssProtection { xss ->
+          xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
+        }
+        it.contentSecurityPolicy { cps -> cps.policyDirectives("default-src 'self'") }
+        it.httpStrictTransportSecurity { hsts -> hsts.includeSubDomains(true).maxAgeInSeconds(36L) }
+      }
+      .authorizeHttpRequests { authorize ->
+        authorize
+          .requestMatchers(this.securityProperties.userAuthenticationPath)
+          .permitAll()
+          .anyRequest()
+          .authenticated()
+      }
+      .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+      .authenticationProvider(authenticationProvider())
+      .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
 
-        return http.build()
-    }
+    return http.build()
+  }
 
-    /**
-     * Configura el proveedor de autenticación con el servicio de detalles de usuario
-     * y el codificador de contraseñas.
-     */
-    @Bean
-    fun authenticationProvider(): DaoAuthenticationProvider {
-        val authProvider = DaoAuthenticationProvider(userDetailsService)
-        authProvider.setPasswordEncoder(passwordEncoder())
-        return authProvider
-    }
+  /**
+   * Configura el proveedor de autenticación con el servicio de detalles de usuario y el codificador
+   * de contraseñas.
+   */
+  @Bean
+  fun authenticationProvider(): DaoAuthenticationProvider {
+    val authProvider = DaoAuthenticationProvider(userDetailsService)
+    authProvider.setPasswordEncoder(passwordEncoder())
+    return authProvider
+  }
 
-    /**
-     * Expone el AuthenticationManager para su uso en el controlador de autenticación.
-     */
-    @Bean
-    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
-        return config.authenticationManager
-    }
+  /** Expone el AuthenticationManager para su uso en el controlador de autenticación. */
+  @Bean
+  fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
+    return config.authenticationManager
+  }
 
-    /**
-     * Define un codificador de contraseñas.
-     * BCrypt es el estándar recomendado para hashear contraseñas.
-     */
-    @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
+  /**
+   * Define un codificador de contraseñas. BCrypt es el estándar recomendado para hashear
+   * contraseñas.
+   */
+  @Bean
+  fun passwordEncoder(): PasswordEncoder {
+    return BCryptPasswordEncoder()
+  }
 
-    /**
-     * Configura el origen de CORS para permitir solicitudes desde cualquier origen
-     * y con los métodos y cabeceras necesarios.
-     */
-    @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration()
-        configuration.allowedOriginPatterns = this.securityProperties.cors
-        configuration.allowedMethods = listOf(
-            HttpMethod.GET.name(),
-            HttpMethod.POST.name(),
-            HttpMethod.PUT.name(),
-            HttpMethod.DELETE.name(),
-            HttpMethod.OPTIONS.name()
-        )
-        configuration.allowedHeaders = listOf(CorsConfiguration.ALL)
-        configuration.allowCredentials = true
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", configuration)
-        return source
-    }
+  /**
+   * Configura el origen de CORS para permitir solicitudes desde cualquier origen y con los métodos
+   * y cabeceras necesarios.
+   */
+  @Bean
+  fun corsConfigurationSource(): CorsConfigurationSource {
+    val configuration = CorsConfiguration()
+    configuration.allowedOriginPatterns = this.securityProperties.cors
+    configuration.allowedMethods =
+      listOf(
+        HttpMethod.GET.name(),
+        HttpMethod.POST.name(),
+        HttpMethod.PUT.name(),
+        HttpMethod.DELETE.name(),
+        HttpMethod.OPTIONS.name(),
+      )
+    configuration.allowedHeaders = listOf(CorsConfiguration.ALL)
+    configuration.allowCredentials = true
+    val source = UrlBasedCorsConfigurationSource()
+    source.registerCorsConfiguration("/**", configuration)
+    return source
+  }
 }
