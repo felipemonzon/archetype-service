@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * Controlador REST. Sigue el Principio de Responsabilidad Única (SRP).
- * Solo maneja peticiones HTTP y delega la lógica de negocio al servicio.
+ * Controlador REST. Sigue el Principio de Responsabilidad Única (SRP). Solo maneja peticiones HTTP
+ * y delega la lógica de negocio al servicio.
  *
- *  @author Felipe Monzón
- *  @since 02 sept, 2025
+ * @author Felipe Monzón
+ * @since 02 sept, 2025
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 class UserController(private val userCreationService: UserCreationService) {
-    @PostMapping
-    fun createUser(@Valid @RequestBody userDTO: UserDto): ResponseEntity<UserDto> {
-        return try {
-            val newUser = userCreationService.createNewUser(userDTO)
-            ResponseEntity(UserDto.fromDomain(newUser), HttpStatus.CREATED)
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity(null, HttpStatus.BAD_REQUEST)
-        }
+  @PostMapping
+  fun createUser(@Valid @RequestBody userDTO: UserDto): ResponseEntity<UserDto> {
+    return try {
+      val newUser = userCreationService.createNewUser(userDTO)
+      ResponseEntity(UserDto.fromDomain(newUser), HttpStatus.CREATED)
+    } catch (e: IllegalArgumentException) {
+      ResponseEntity(null, HttpStatus.BAD_REQUEST)
     }
+  }
 }
