@@ -1,7 +1,8 @@
-package com.moontech.archetype.infrastructure.persistence
+package com.moontech.archetype.users.infrastructure.persistence.repository
 
-import com.moontech.archetype.domain.model.User
-import com.moontech.archetype.domain.repository.UserRepository
+import com.moontech.archetype.users.domain.model.dtos.User
+import com.moontech.archetype.users.domain.repository.UserRepository
+import com.moontech.archetype.users.infrastructure.persistence.entity.UserEntity
 import org.springframework.stereotype.Repository
 import java.util.Optional
 
@@ -15,9 +16,7 @@ import java.util.Optional
 @Repository
 class JpaUserRepository(private val jpaRepository: UserSpringDataRepository) : UserRepository {
     override fun save(user: User): User {
-        val entity = UserEntity.fromDomain(user)
-        val savedEntity = jpaRepository.save(entity)
-        return savedEntity.toDomain()
+        return jpaRepository.save(UserEntity.fromDomain(user)).toDomain();
     }
 
     override fun findById(id: Long): Optional<User> {

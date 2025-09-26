@@ -1,7 +1,8 @@
-package com.moontech.archetype.infrastructure.controller
+package com.moontech.archetype.users.infrastructure.controller
 
-import com.moontech.archetype.application.business.UserCreationService
-import com.moontech.archetype.infrastructure.model.UserDto
+
+import com.moontech.archetype.users.application.business.UsersService
+import com.moontech.archetype.users.infrastructure.model.UserDTO
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,12 +20,11 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/api/users")
-class UserController(private val userCreationService: UserCreationService) {
+class UserController(private val userService: UsersService) {
     @PostMapping
-    fun createUser(@Valid @RequestBody userDTO: UserDto): ResponseEntity<UserDto> {
+    fun createUser(@Valid @RequestBody userDTO: UserDTO): ResponseEntity<UserDTO> {
         return try {
-            val newUser = userCreationService.createNewUser(userDTO)
-            ResponseEntity(UserDto.fromDomain(newUser), HttpStatus.CREATED)
+            ResponseEntity(UserDTO.fromDomain(userService.saveUser(userDTO)), HttpStatus.CREATED)
         } catch (e: IllegalArgumentException) {
             ResponseEntity(null, HttpStatus.BAD_REQUEST)
         }

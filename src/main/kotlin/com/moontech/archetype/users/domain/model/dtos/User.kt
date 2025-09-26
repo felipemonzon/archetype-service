@@ -1,4 +1,4 @@
-package com.moontech.archetype.domain.model
+package com.moontech.archetype.users.domain.model.dtos
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime

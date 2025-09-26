@@ -10,7 +10,7 @@ VALUES(1);
 -- archetype.users definition
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` bigint NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `first_name` varchar(50) NOT NULL,
   `email_address` varchar(255) NOT NULL,
   `password` varchar(200) NOT NULL,

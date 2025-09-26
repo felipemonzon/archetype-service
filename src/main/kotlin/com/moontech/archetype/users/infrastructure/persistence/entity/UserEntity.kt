@@ -1,8 +1,9 @@
-package com.moontech.archetype.infrastructure.persistence
+package com.moontech.archetype.users.infrastructure.persistence.entity
 
-import com.moontech.archetype.domain.model.User
+import com.moontech.archetype.users.domain.model.dtos.User
 import jakarta.persistence.*
 import org.hibernate.annotations.NaturalId
+import tech.mappie.api.ObjectMappie
 
 /**
  * Entidad de Persistencia, que es distinta de la entidad de dominio.
@@ -26,21 +27,7 @@ class UserEntity(
     @Column(name = "password", nullable = false, length = 200)
     val password: String
 ) {
-    fun toDomain(): User {
-        return User(
-            id = this.id, name = this.name, email = this.email,
-            username = this.username,
-            password = this.password,
-        )
-    }
+    fun toDomain() = User(id = this.id, name = this.name, email = this.email,  username = this.username, password = this.password)
+    companion object { fun fromDomain(user : User) = UserEntity(id = user.id, name = user.name, email = user.email, username = user.username, password = user.password) }
 
-    companion object {
-        fun fromDomain(user: User): UserEntity {
-            return UserEntity(
-                id = user.id, name = user.name, email = user.email,
-                username = user.username,
-                password = user.password
-            )
-        }
-    }
 }

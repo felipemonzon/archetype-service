@@ -1,5 +1,6 @@
-package com.moontech.archetype.infrastructure.persistence
+package com.moontech.archetype.users.infrastructure.persistence.repository
 
+import com.moontech.archetype.users.infrastructure.persistence.entity.UserEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*

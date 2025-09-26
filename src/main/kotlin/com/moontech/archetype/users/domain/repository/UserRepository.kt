@@ -1,6 +1,6 @@
-package com.moontech.archetype.domain.repository
+package com.moontech.archetype.users.domain.repository
 
-import com.moontech.archetype.domain.model.User
+import com.moontech.archetype.users.domain.model.dtos.User
 import java.util.*
 
 /**

@@ -13,8 +13,8 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/archetype
-    username: ENC(ku7ULo35PR0vtzrDInm9YZe0l3cz6Z2rp2ON6YD2lKdNOmj2rzmdwlyr6PdRj5gg)
-    password: ENC(17Atuv7t31S12Oz8kBXTfyTTVt6GYNDr6ousctZdQ2TK/5TcRbpUoo5pEBdvb4J5)
+    username: root
+    password: root
   jpa:
     naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
     hibernate.ddl-auto: validate
@@ -23,7 +23,7 @@ spring:
         format_sql: false
 
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:/db/migration
     baseline-on-migrate: true
     baseline: 0
